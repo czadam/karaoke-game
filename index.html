@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#16111f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Grab the Mic</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎤</text></svg>" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ============ SETUP ============ -->
+  <section id="screen-setup" class="screen active">
+    <header class="topbar">
+      <div class="seg seg-small" id="ui-lang">
+        <button data-val="en">EN</button>
+        <button data-val="hu">HU</button>
+      </div>
+      <button class="btn-ghost" id="btn-rules" data-i18n="rules"></button>
+    </header>
+
+    <div class="setup-body">
+      <div class="logo">🎤</div>
+      <h1 data-i18n="title"></h1>
+      <p class="tagline" data-i18n="tagline"></p>
+
+      <div class="field">
+        <label data-i18n="cardLang"></label>
+        <div class="seg" id="card-lang">
+          <button data-val="en" data-i18n="langEn"></button>
+          <button data-val="hu" data-i18n="langHu"></button>
+          <button data-val="both" data-i18n="langBoth"></button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label data-i18n="mode"></label>
+        <div class="seg" id="mode">
+          <button data-val="free" data-i18n="modeFree"></button>
+          <button data-val="score" data-i18n="modeScore"></button>
+        </div>
+      </div>
+
+      <div class="field" id="players-field">
+        <label data-i18n="players"></label>
+        <form id="add-player" class="add-player" autocomplete="off">
+          <input id="player-name" type="text" maxlength="16" enterkeyhint="done" />
+          <button type="submit" class="btn-add" aria-label="Add">+</button>
+        </form>
+        <ul id="player-list" class="player-list"></ul>
+        <p class="hint" id="players-hint" data-i18n="playersHint"></p>
+      </div>
+    </div>
+
+    <footer class="bottombar">
+      <button class="btn-secondary" id="btn-resume" hidden data-i18n="resume"></button>
+      <button class="btn-primary" id="btn-start" data-i18n="start"></button>
+    </footer>
+  </section>
+
+  <!-- ============ RULES ============ -->
+  <section id="screen-rules" class="screen">
+    <header class="topbar">
+      <button class="btn-ghost" data-back>←</button>
+      <div class="seg seg-small" id="rules-lang">
+        <button data-val="en">EN</button>
+        <button data-val="hu">HU</button>
+      </div>
+    </header>
+    <article class="rules" id="rules-content"></article>
+  </section>
+
+  <!-- ============ GAME ============ -->
+  <section id="screen-game" class="screen">
+    <header class="topbar">
+      <button class="btn-ghost" id="btn-home" aria-label="Home">✕</button>
+      <span class="counter" id="counter"></span>
+      <button class="btn-ghost" id="btn-scoreboard" aria-label="Scores">🏆</button>
+    </header>
+
+    <div class="table">
+      <div class="card-wrap" id="card-wrap">
+        <div class="card" id="card">
+          <div class="face back">
+            <div class="back-pattern"></div>
+            <div class="back-mic">🎤</div>
+            <div class="back-hint upside" data-i18n="tapToDraw"></div>
+            <div class="back-hint" data-i18n="tapToDraw"></div>
+          </div>
+          <div class="face front">
+            <div class="half top"><span class="word" id="word-top"></span><span class="flag" id="flag-top"></span></div>
+            <div class="divider"><span>🎤</span></div>
+            <div class="half bottom"><span class="word" id="word-bottom"></span><span class="flag" id="flag-bottom"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="score-strip" id="score-strip">
+      <p class="hint center" id="score-hint"></p>
+      <ul class="chips" id="chips"></ul>
+    </div>
+
+    <footer class="bottombar">
+      <button class="btn-primary" id="btn-draw" data-i18n="draw"></button>
+    </footer>
+  </section>
+
+  <!-- ============ SHEETS ============ -->
+  <div class="sheet-backdrop" id="sheet-backdrop" hidden></div>
+
+  <div class="sheet" id="sheet-score" hidden>
+    <h2 id="sheet-score-title"></h2>
+    <div class="score-buttons">
+      <button class="btn-minus" data-delta="-1">−1</button>
+      <button class="btn-plus" data-delta="1">+1</button>
+    </div>
+    <button class="btn-ghost wide" id="btn-clear-round" data-i18n="clearRound"></button>
+  </div>
+
+  <div class="sheet" id="sheet-board" hidden>
+    <h2 data-i18n="scoreboard"></h2>
+    <ol class="board" id="board"></ol>
+    <div class="sheet-actions">
+      <button class="btn-secondary" id="btn-reset-scores" data-i18n="resetScores"></button>
+      <button class="btn-primary" id="btn-close-board" data-i18n="close"></button>
+    </div>
+  </div>
+
+  <div class="sheet" id="sheet-confirm" hidden>
+    <p class="confirm-text" id="confirm-text"></p>
+    <div class="sheet-actions">
+      <button class="btn-secondary" id="btn-confirm-cancel"></button>
+      <button class="btn-primary" id="btn-confirm-ok"></button>
+    </div>
+  </div>
+
+  <script src="words.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
