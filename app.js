@@ -302,32 +302,44 @@
   const card = $("#card");
   let busy = false;
 
-  function draw() {
+  // Turn the card edge-on, run swap() while it is invisible, turn it back.
+  async function turn(swap) {
+    if (!card.animate) { swap(); return; }
+    const out = card.animate(
+      [{ transform: "rotateY(0deg)" }, { transform: "rotateY(90deg)" }],
+      { duration: 160, easing: "ease-in", fill: "forwards" }
+    );
+    await out.finished;
+    swap();
+    const back = card.animate(
+      [{ transform: "rotateY(-90deg)" }, { transform: "rotateY(0deg)" }],
+      { duration: 420, easing: "cubic-bezier(.3, 1.4, .5, 1)" }
+    );
+    out.cancel();
+    await back.finished;
+  }
+
+  async function draw() {
     if (busy || !game) return;
     busy = true;
     closeSheets();
-
-    const reveal = () => {
-      game.current = nextWordIndex();
-      game.revealed = true;
-      game.drawn++;
-      game.round = {};
-      save();
-      renderGame();
-      fitWords();
-      card.classList.add("flipped");
+    try {
+      if (game.revealed) {
+        // show the card back first, then deal the next card
+        await turn(() => { game.revealed = false; renderGame(); });
+      }
+      await turn(() => {
+        game.current = nextWordIndex();
+        game.revealed = true;
+        game.drawn++;
+        game.round = {};
+        save();
+        renderGame();
+        fitWords(true);
+      });
       vibrate(15);
-      setTimeout(() => (busy = false), 600);
-    };
-
-    if (card.classList.contains("flipped")) {
-      // flip back first, then deal the next card
-      card.classList.remove("flipped");
-      game.revealed = false;
-      renderGame();
-      setTimeout(reveal, 450);
-    } else {
-      reveal();
+    } finally {
+      busy = false;
     }
   }
 
@@ -381,11 +393,12 @@
   }
 
   /* shrink each word until it fits its half of the card */
-  function fitWords() {
-    requestAnimationFrame(() => {
+  function fitWords(now) {
+    const run = () => {
       ["#word-top", "#word-bottom"].forEach((sel) => {
         const el = $(sel);
         const half = el.parentElement;
+        if (!half.clientWidth) return; // front face not shown right now
         const maxW = half.clientWidth - 28;
         const maxH = half.clientHeight * 0.55;
         let size = Math.min(maxH, 110);
@@ -395,7 +408,8 @@
           el.style.fontSize = size + "px";
         }
       });
-    });
+    };
+    now ? run() : requestAnimationFrame(run);
   }
   window.addEventListener("resize", () => game && fitWords());
 

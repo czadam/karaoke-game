@@ -215,46 +215,28 @@ h1 { text-align: center; margin: 6px 0 4px; font-size: 2rem; letter-spacing: .01
   .card-wrap { width: 100%; }
 }
 
+/* The flip is two half-turns run from app.js: the card turns edge-on, the
+   faces are swapped while it is invisible, then it turns back. Only one face is
+   ever rendered, so nothing can bleed through (iOS Safari ignores
+   backface-visibility on animated children). */
 .card {
   position: relative;
   width: 100%;
   height: 100%;
-  transform-style: preserve-3d;
-  transition: transform .6s cubic-bezier(.3, 1.4, .5, 1);
   cursor: pointer;
 }
-.card.flipped { transform: rotateY(180deg); }
-.card.dealing { animation: deal .35s ease-out; }
-@keyframes deal {
-  from { transform: translateY(30px) scale(.92); opacity: .3; }
-  to { transform: none; opacity: 1; }
-}
+.card:not(.flipped) .front,
+.card.flipped .back { display: none; }
 
 .face {
   position: absolute;
   inset: 0;
   border-radius: 22px;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
   overflow: hidden;
   box-shadow: 0 20px 50px -15px rgba(0, 0, 0, .7);
 }
 
-/* iOS Safari: children with their own transform/animation ignore the parent's
-   backface-visibility, so they flash through mid-flip. Hide them on each layer too,
-   and switch them off halfway through the turn as a backstop. */
-.face > * {
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  /* the flip easing turns the card edge-on after ~75ms of its 600ms */
-  transition: visibility 0s linear 75ms;
-}
-.card.flipped .back > *,
-.card:not(.flipped) .front > * { visibility: hidden; }
-.card.flipped .back-mic { animation: none; }
-
 .back {
-  transform: rotateY(0deg) translateZ(1px);
   background: linear-gradient(145deg, var(--accent), #8a3cff);
   display: flex;
   align-items: center;
@@ -292,7 +274,6 @@ h1 { text-align: center; margin: 6px 0 4px; font-size: 2rem; letter-spacing: .01
 .front {
   background: var(--card);
   color: var(--card-ink);
-  transform: rotateY(180deg) translateZ(1px);
   display: flex;
   flex-direction: column;
   border: 6px solid #fff;
