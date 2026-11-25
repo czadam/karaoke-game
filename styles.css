@@ -240,7 +240,19 @@ h1 { text-align: center; margin: 6px 0 4px; font-size: 2rem; letter-spacing: .01
   box-shadow: 0 20px 50px -15px rgba(0, 0, 0, .7);
 }
 
+/* iOS Safari: children with their own transform/animation ignore the parent's
+   backface-visibility, so they flash through mid-flip. Hide them on each layer too,
+   and switch them off halfway through the turn as a backstop. */
+.face > * {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transition: visibility 0s linear .22s;
+}
+.card.flipped .back > *,
+.card:not(.flipped) .front > * { visibility: hidden; }
+
 .back {
+  transform: rotateY(0deg) translateZ(1px);
   background: linear-gradient(145deg, var(--accent), #8a3cff);
   display: flex;
   align-items: center;
@@ -278,7 +290,7 @@ h1 { text-align: center; margin: 6px 0 4px; font-size: 2rem; letter-spacing: .01
 .front {
   background: var(--card);
   color: var(--card-ink);
-  transform: rotateY(180deg);
+  transform: rotateY(180deg) translateZ(1px);
   display: flex;
   flex-direction: column;
   border: 6px solid #fff;
