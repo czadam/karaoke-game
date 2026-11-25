@@ -4,7 +4,7 @@
   /* ================= i18n ================= */
   const T = {
     en: {
-      title: "Grab the Mic",
+      title: "Karaoke Game",
       tagline: "Draw a word. Find a song. Sing it!",
       rules: "Rules",
       cardLang: "Card language",
@@ -37,7 +37,7 @@
       cancel: "Cancel",
     },
     hu: {
-      title: "Kapd el a mikit!",
+      title: "Karaoke játék",
       tagline: "Húzz egy szót. Találj egy dalt. Énekeld!",
       rules: "Szabályok",
       cardLang: "Kártyák nyelve",

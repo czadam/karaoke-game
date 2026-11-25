@@ -1,4 +1,4 @@
-# Grab the Mic 🎤
+# Karaoke Game 🎤
 
 A phone party game. Put something mic-shaped on the table (a deodorant, a toilet roll, a water bottle), reveal a word card, and race to grab the "mic" and sing a line from a song that contains the word.
 
