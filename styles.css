@@ -246,10 +246,12 @@ h1 { text-align: center; margin: 6px 0 4px; font-size: 2rem; letter-spacing: .01
 .face > * {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  transition: visibility 0s linear .22s;
+  /* the flip easing turns the card edge-on after ~75ms of its 600ms */
+  transition: visibility 0s linear 75ms;
 }
 .card.flipped .back > *,
 .card:not(.flipped) .front > * { visibility: hidden; }
+.card.flipped .back-mic { animation: none; }
 
 .back {
   transform: rotateY(0deg) translateZ(1px);
